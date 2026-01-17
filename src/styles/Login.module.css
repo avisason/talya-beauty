@@ -1,0 +1,200 @@
+.container {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background with brand image */
+.backgroundImage {
+  position: absolute;
+  inset: 0;
+  background-image: url('/logo.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  z-index: 0;
+}
+
+.backgroundOverlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(248, 232, 232, 0.85) 0%,
+    rgba(253, 248, 245, 0.9) 50%,
+    rgba(248, 232, 232, 0.85) 100%
+  );
+  z-index: 1;
+}
+
+.loginCard {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: var(--radius-xl);
+  padding: 3rem;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 
+    0 20px 60px rgba(183, 110, 121, 0.15),
+    0 0 0 1px rgba(255, 255, 255, 0.8);
+  position: relative;
+  z-index: 2;
+  animation: fadeIn 0.8s ease forwards;
+  text-align: center;
+}
+
+.logoSection {
+  margin-bottom: 2rem;
+}
+
+.title {
+  font-family: var(--font-display);
+  font-size: 2.25rem;
+  color: var(--color-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: 1px;
+  direction: rtl;
+}
+
+.subtitle {
+  font-size: 0.95rem;
+  color: var(--color-gray-500);
+  font-weight: 300;
+  direction: rtl;
+}
+
+.divider {
+  display: flex;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.divider::before,
+.divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--color-accent), transparent);
+}
+
+.dividerText {
+  padding: 0 1rem;
+  font-size: 0.85rem;
+  color: var(--color-gray-400);
+  font-weight: 400;
+  direction: rtl;
+}
+
+.googleButton {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 1rem 1.5rem;
+  background: var(--color-white);
+  border: 2px solid var(--color-gray-200);
+  border-radius: var(--radius-md);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-gray-700);
+  transition: all var(--transition-base);
+  direction: rtl;
+}
+
+.googleButton:hover {
+  border-color: var(--color-primary-light);
+  background: var(--color-gray-50);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.googleButton:active {
+  transform: translateY(0);
+}
+
+.googleIcon {
+  width: 24px;
+  height: 24px;
+}
+
+.footer {
+  margin-top: 2rem;
+  font-size: 0.8rem;
+  color: var(--color-gray-400);
+  direction: rtl;
+}
+
+.loadingContainer {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-secondary);
+}
+
+.loader {
+  width: 50px;
+  height: 50px;
+  border: 3px solid var(--color-gray-200);
+  border-top-color: var(--color-primary);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Mobile styles */
+@media (max-width: 480px) {
+  .container {
+    padding: 1rem;
+    align-items: flex-end;
+    padding-bottom: 2rem;
+  }
+  
+  .loginCard {
+    padding: 2rem 1.5rem;
+    border-radius: var(--radius-lg);
+    max-width: 100%;
+  }
+  
+  .title {
+    font-size: 1.75rem;
+  }
+  
+  .subtitle {
+    font-size: 0.85rem;
+  }
+  
+  .divider {
+    margin: 1.5rem 0;
+  }
+  
+  .googleButton {
+    padding: 1rem;
+    font-size: 0.95rem;
+  }
+  
+  .googleButton:active {
+    background: var(--color-gray-100);
+  }
+  
+  .footer {
+    margin-top: 1.5rem;
+  }
+}
+
+/* Safe area for notched phones */
+@supports (padding-bottom: env(safe-area-inset-bottom)) {
+  .container {
+    padding-bottom: calc(2rem + env(safe-area-inset-bottom));
+  }
+}

@@ -1,0 +1,216 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Poppins:wght@300;400;500;600&display=swap');
+
+:root {
+  /* Elegant rose gold & cream palette */
+  --color-primary: #B76E79;
+  --color-primary-dark: #9A5A63;
+  --color-primary-light: #D4A5AC;
+  --color-secondary: #F8E8E8;
+  --color-accent: #E8C4C4;
+  --color-gold: #C9A962;
+  --color-gold-light: #E8D9A8;
+  
+  /* Neutrals */
+  --color-cream: #FDF8F5;
+  --color-white: #FFFFFF;
+  --color-gray-50: #FAF7F5;
+  --color-gray-100: #F5F0ED;
+  --color-gray-200: #E8E0DB;
+  --color-gray-300: #D4C9C2;
+  --color-gray-400: #A89B92;
+  --color-gray-500: #7D7068;
+  --color-gray-600: #5A4F48;
+  --color-gray-700: #3D352F;
+  --color-gray-800: #2A241F;
+  --color-gray-900: #1A1614;
+  
+  /* Status colors */
+  --color-success: #7CB69D;
+  --color-warning: #E5B567;
+  --color-error: #D97373;
+  --color-info: #7B9FC7;
+  
+  /* Typography */
+  --font-display: 'Playfair Display', Georgia, serif;
+  --font-body: 'Poppins', -apple-system, sans-serif;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px rgba(183, 110, 121, 0.05);
+  --shadow-md: 0 4px 12px rgba(183, 110, 121, 0.1);
+  --shadow-lg: 0 8px 30px rgba(183, 110, 121, 0.12);
+  --shadow-xl: 0 20px 50px rgba(183, 110, 121, 0.15);
+  
+  /* Transitions */
+  --transition-fast: 150ms ease;
+  --transition-base: 250ms ease;
+  --transition-slow: 400ms ease;
+  
+  /* Border radius */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 28px;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-size: 16px;
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+  -ms-text-size-adjust: 100%;
+}
+
+/* Mobile viewport fix */
+@supports (-webkit-touch-callout: none) {
+  html {
+    height: -webkit-fill-available;
+  }
+  body {
+    min-height: -webkit-fill-available;
+  }
+}
+
+body {
+  font-family: var(--font-body);
+  background: var(--color-cream);
+  color: var(--color-gray-700);
+  line-height: 1.6;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  direction: rtl;
+  text-align: right;
+}
+
+/* Elegant background pattern */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: 
+    radial-gradient(circle at 20% 20%, rgba(183, 110, 121, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(201, 169, 98, 0.03) 0%, transparent 50%),
+    radial-gradient(circle at 40% 70%, rgba(212, 165, 172, 0.02) 0%, transparent 40%);
+  pointer-events: none;
+  z-index: 0;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-display);
+  font-weight: 600;
+  color: var(--color-gray-800);
+  line-height: 1.3;
+}
+
+button {
+  font-family: var(--font-body);
+  cursor: pointer;
+  border: none;
+  outline: none;
+  transition: all var(--transition-base);
+}
+
+input, textarea, select {
+  font-family: var(--font-body);
+  outline: none;
+  border: 1px solid var(--color-gray-200);
+  transition: all var(--transition-fast);
+}
+
+input:focus, textarea:focus, select:focus {
+  border-color: var(--color-primary-light);
+  box-shadow: 0 0 0 3px rgba(183, 110, 121, 0.1);
+}
+
+/* Scrollbar styling */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--color-gray-100);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--color-primary-light);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--color-primary);
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateX(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes float {
+  0%, 100% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+/* Utility classes */
+.fade-in {
+  animation: fadeIn 0.5s ease forwards;
+}
+
+.slide-in {
+  animation: slideIn 0.4s ease forwards;
+}
+
+/* Toast customization */
+.toast-custom {
+  font-family: var(--font-body) !important;
+}
+
