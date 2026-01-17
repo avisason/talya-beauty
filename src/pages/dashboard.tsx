@@ -12,9 +12,8 @@ import {
   deleteDoc,
   doc,
 } from 'firebase/firestore';
-import { Lead, LeadFormData, Source, Status, InquiryType, DescriptionEntry } from '@/types/lead';
+import { Lead, LeadFormData, Source, Status, InquiryType } from '@/types/lead';
 import toast from 'react-hot-toast';
-import { format } from 'date-fns';
 import styles from '@/styles/Dashboard.module.css';
 
 const SOURCES: Source[] = ['אינסטגרם', 'טיקטוק', 'פייסבוק', 'אימייל', 'טלפון'];
@@ -23,6 +22,7 @@ const INQUIRY_TYPES: InquiryType[] = ['איפור ערב', 'שיער ערב', '�
 
 const emptyLead: LeadFormData = {
   fullName: '',
+  eventDate: '',
   source: 'אינסטגרם',
   status: 'חדש',
   inquiryType: 'כלה מלא',
@@ -30,7 +30,6 @@ const emptyLead: LeadFormData = {
   advancePayment: false,
   additionalDetails: '',
   importantNotes: '',
-  descriptions: [],
 };
 
 export default function Dashboard() {
@@ -40,8 +39,6 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingLead, setEditingLead] = useState<Lead | null>(null);
   const [formData, setFormData] = useState<LeadFormData>(emptyLead);
-  const [newDescription, setNewDescription] = useState('');
-  const [skipDay, setSkipDay] = useState(false);
   const [filterStatus, setFilterStatus] = useState<Status | 'הכל'>('הכל');
   const [filterSource, setFilterSource] = useState<Source | 'הכל'>('הכל');
   const [filterInquiry, setFilterInquiry] = useState<InquiryType | 'הכל'>('הכל');
@@ -78,6 +75,7 @@ export default function Dashboard() {
       setEditingLead(lead);
       setFormData({
         fullName: lead.fullName,
+        eventDate: lead.eventDate || '',
         source: lead.source,
         status: lead.status,
         inquiryType: lead.inquiryType,
@@ -85,14 +83,11 @@ export default function Dashboard() {
         advancePayment: lead.advancePayment,
         additionalDetails: lead.additionalDetails,
         importantNotes: lead.importantNotes,
-        descriptions: lead.descriptions || [],
       });
     } else {
       setEditingLead(null);
       setFormData(emptyLead);
     }
-    setNewDescription('');
-    setSkipDay(false);
     setIsModalOpen(true);
   };
 
@@ -100,23 +95,6 @@ export default function Dashboard() {
     setIsModalOpen(false);
     setEditingLead(null);
     setFormData(emptyLead);
-    setNewDescription('');
-    setSkipDay(false);
-  };
-
-  const handleAddDescription = () => {
-    const today = format(new Date(), 'dd/MM/yyyy');
-    const entry: DescriptionEntry = {
-      date: today,
-      text: skipDay ? '[דילגתי]' : newDescription,
-      skipped: skipDay,
-    };
-    setFormData({
-      ...formData,
-      descriptions: [...formData.descriptions, entry],
-    });
-    setNewDescription('');
-    setSkipDay(false);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -156,22 +134,30 @@ export default function Dashboard() {
     }
   };
 
-  const filteredLeads = leads.filter((lead) => {
-    const matchesStatus = filterStatus === 'הכל' || lead.status === filterStatus;
-    const matchesSource = filterSource === 'הכל' || lead.source === filterSource;
-    const matchesInquiry = filterInquiry === 'הכל' || lead.inquiryType === filterInquiry;
-    const matchesClosed = filterClosed === 'הכל' || 
-      (filterClosed === 'סגור' && lead.closed) || 
-      (filterClosed === 'פתוח' && !lead.closed);
-    const matchesPaid = filterPaid === 'הכל' || 
-      (filterPaid === 'שולם' && lead.advancePayment) || 
-      (filterPaid === 'לא שולם' && !lead.advancePayment);
-    
-    const searchLower = searchQuery.toLowerCase();
-    const matchesSearch = !searchQuery || lead.fullName.toLowerCase().includes(searchLower);
-    
-    return matchesStatus && matchesSource && matchesInquiry && matchesClosed && matchesPaid && matchesSearch;
-  });
+  const filteredLeads = leads
+    .filter((lead) => {
+      const matchesStatus = filterStatus === 'הכל' || lead.status === filterStatus;
+      const matchesSource = filterSource === 'הכל' || lead.source === filterSource;
+      const matchesInquiry = filterInquiry === 'הכל' || lead.inquiryType === filterInquiry;
+      const matchesClosed = filterClosed === 'הכל' || 
+        (filterClosed === 'סגור' && lead.closed) || 
+        (filterClosed === 'פתוח' && !lead.closed);
+      const matchesPaid = filterPaid === 'הכל' || 
+        (filterPaid === 'שולם' && lead.advancePayment) || 
+        (filterPaid === 'לא שולם' && !lead.advancePayment);
+      
+      const searchLower = searchQuery.toLowerCase();
+      const matchesSearch = !searchQuery || lead.fullName.toLowerCase().includes(searchLower);
+      
+      return matchesStatus && matchesSource && matchesInquiry && matchesClosed && matchesPaid && matchesSearch;
+    })
+    .sort((a, b) => {
+      // Sort by event date (closest first), leads without date go to the end
+      if (!a.eventDate && !b.eventDate) return 0;
+      if (!a.eventDate) return 1;
+      if (!b.eventDate) return -1;
+      return new Date(a.eventDate).getTime() - new Date(b.eventDate).getTime();
+    });
 
   const clearAllFilters = () => {
     setFilterStatus('הכל');
@@ -446,6 +432,12 @@ export default function Dashboard() {
                   <span className={styles.inquiryType}>{lead.inquiryType}</span>
                   <span className={styles.metaDot}>•</span>
                   <span className={styles.source}>{lead.source}</span>
+                  {lead.eventDate && (
+                    <>
+                      <span className={styles.metaDot}>•</span>
+                      <span className={styles.eventDate}>{new Date(lead.eventDate).toLocaleDateString('he-IL')}</span>
+                    </>
+                  )}
                 </div>
                 
                 {lead.importantNotes && (
@@ -512,6 +504,15 @@ export default function Dashboard() {
                     value={formData.fullName}
                     onChange={(e) => setFormData({ ...formData, fullName: e.target.value })}
                     placeholder="הכניסי שם מלא"
+                  />
+                </div>
+                
+                <div className={styles.formGroup}>
+                  <label>תאריך האירוע</label>
+                  <input
+                    type="date"
+                    value={formData.eventDate}
+                    onChange={(e) => setFormData({ ...formData, eventDate: e.target.value })}
                   />
                 </div>
                 
@@ -593,53 +594,6 @@ export default function Dashboard() {
                   rows={3}
                   className={styles.importantTextarea}
                 />
-              </div>
-              
-              {/* Description Timeline */}
-              <div className={styles.descriptionSection}>
-                <label>תיעוד (ציר זמן)</label>
-                
-                <div className={styles.addDescriptionBox}>
-                  <div className={styles.descriptionInputRow}>
-                    <input
-                      type="text"
-                      value={newDescription}
-                      onChange={(e) => setNewDescription(e.target.value)}
-                      placeholder="הוסיפי עדכון להיום..."
-                      disabled={skipDay}
-                    />
-                    <label className={styles.skipCheckbox}>
-                      <input
-                        type="checkbox"
-                        checked={skipDay}
-                        onChange={(e) => setSkipDay(e.target.checked)}
-                      />
-                      דלגי
-                    </label>
-                    <button
-                      type="button"
-                      onClick={handleAddDescription}
-                      disabled={!skipDay && !newDescription.trim()}
-                      className={styles.addDescButton}
-                    >
-                      הוסף
-                    </button>
-                  </div>
-                </div>
-                
-                {formData.descriptions.length > 0 && (
-                  <div className={styles.timeline}>
-                    {formData.descriptions.map((desc, index) => (
-                      <div key={index} className={`${styles.timelineItem} ${desc.skipped ? styles.skipped : ''}`}>
-                        <div className={styles.timelineDot}></div>
-                        <div className={styles.timelineContent}>
-                          <span className={styles.timelineDate}>{desc.date}</span>
-                          <p>{desc.text}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
               </div>
               
               <div className={styles.formActions}>

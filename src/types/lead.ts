@@ -2,15 +2,10 @@ export type Source = 'אינסטגרם' | 'טיקטוק' | 'פייסבוק' | '�
 export type Status = 'חדש' | 'מענה ראשוני' | 'פולואפ' | 'נסגר';
 export type InquiryType = 'איפור ערב' | 'שיער ערב' | 'איפור + שיער ערב' | 'כלה חלקי' | 'כלה מלא';
 
-export interface DescriptionEntry {
-  date: string;
-  text: string;
-  skipped?: boolean;
-}
-
 export interface Lead {
   id: string;
   fullName: string;
+  eventDate: string;
   source: Source;
   status: Status;
   inquiryType: InquiryType;
@@ -18,7 +13,6 @@ export interface Lead {
   advancePayment: boolean;
   additionalDetails: string;
   importantNotes: string;
-  descriptions: DescriptionEntry[];
   createdAt: string;
   updatedAt: string;
 }
