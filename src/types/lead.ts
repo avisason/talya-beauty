@@ -1,6 +1,6 @@
 export type Source = 'אינסטגרם' | 'טיקטוק' | 'פייסבוק' | 'אימייל' | 'טלפון';
 export type Status = 'חדש' | 'מענה ראשוני' | 'פולואפ' | 'נסגר';
-export type InquiryType = 'איפור ערב' | 'שיער ערב' | 'כלה חלקי' | 'כלה מלא';
+export type InquiryType = 'איפור ערב' | 'שיער ערב' | 'איפור + שיער ערב' | 'כלה חלקי' | 'כלה מלא';
 
 export interface DescriptionEntry {
   date: string;

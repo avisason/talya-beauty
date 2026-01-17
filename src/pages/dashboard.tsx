@@ -19,7 +19,7 @@ import styles from '@/styles/Dashboard.module.css';
 
 const SOURCES: Source[] = ['אינסטגרם', 'טיקטוק', 'פייסבוק', 'אימייל', 'טלפון'];
 const STATUSES: Status[] = ['חדש', 'מענה ראשוני', 'פולואפ', 'נסגר'];
-const INQUIRY_TYPES: InquiryType[] = ['איפור ערב', 'שיער ערב', 'כלה חלקי', 'כלה מלא'];
+const INQUIRY_TYPES: InquiryType[] = ['איפור ערב', 'שיער ערב', 'איפור + שיער ערב', 'כלה חלקי', 'כלה מלא'];
 
 const emptyLead: LeadFormData = {
   fullName: '',
